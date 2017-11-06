@@ -99,8 +99,12 @@ class Command(StaticfilesRunserverCommand):
 
         self.gulp_process.terminate()
 
+        if self.gulp_process.returncode != 0 and not self.cleanup_closing:
+            raise CommandError('gulp exited unexpectedly')
+
     def start_gulp(self):
         self.stdout.write('>>> Starting gulp')
+        atexit.register(self.kill_gulp_process)
 
         gulp_command = getattr(settings, 'GULP_DEVELOP_COMMAND', 'gulp')
         self.gulp_process = subprocess.Popen(
@@ -116,9 +120,4 @@ class Command(StaticfilesRunserverCommand):
         self.stdout.write('>>> gulp process on pid {0}'
                           .format(self.gulp_process.pid))
 
-        atexit.register(self.kill_gulp_process)
-
         self.gulp_process.wait()
-
-        if self.gulp_process.returncode != 0 and not self.cleanup_closing:
-            raise CommandError('gulp exited unexpectedly')
