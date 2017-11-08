@@ -1,5 +1,7 @@
 ## django-gulp
 
+<span style="color:red">THIS REPOSITORY CONTAINS DEPENDENCY PACKAGE FOR BINPICKING DEVELOPMENT, PLEASE DO NOT REMOVE IT!</span>
+
 `django-gulp` overrides `./manage.py runserver` 
 so that they also run your gulp tasks.
 
