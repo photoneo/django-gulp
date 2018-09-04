@@ -1,77 +1,61 @@
-# Introduction
+## django-gulp
 
-This is a reference project that shows you how to set up a Django project 
-where all the tasks for handling the frontend files are performed by gulp.
+`django-gulp` overrides `./manage.py runserver` 
+so that they also run your gulp tasks.
 
-# Motivation
 
-While there is a lot of information on using gulp and Django together it is
-often out of date and is not aimed at someone learning gulp (and Django) 
-for the first time. That makes the process of learning to set up a project
-sometimes problematic and always time-consuming. The goal here is to provide 
-a workspace where you can see all the steps needed to get started. Armed 
-with this knowledge you can then experiment to see what it takes to create 
-a full production set up.
 
-# Getting Started
+### Installation
 
-Copy the bash script, bootstrap.sh, to the directory where you want to setup 
-your project and run it (you will need sudo rights to install some packages 
-at the system level). 
+Add `"django_gulp"` to your `INSTALLED_APPS` setting like this, making sure
+that it comes before `django.contrib.staticfiles` (or other apps that override
+`runserver` in the list if they're listed):
 
-```bash
-./bootstrap.sh
+```
+INSTALLED_APPS = (
+    'django_gulp',
+    ...
+)
 ```
 
-The script generates all the files you see in the frontend and backend 
-directories to create a working Django project. Once the script finishes. 
-Run the following:
+Now when you run `./manage.py runserver` your `gulp` tasks will run as well!
 
-```bash
-cd frontend
-gulp
+### Settings
+
+`GULP_PRODUCTION_COMMAND` defaults to `gulp build --production`.
+`GULP_DEVELOP_COMMAND` defaults to `gulp`.
+
+
+### Example output
+
+```sh
+$ ./manage.py runserver
+>>> Starting gulp
+>>> gulp process on pid 47863
+Performing system checks...
+
+System check identified no issues.
+May 04, 2015 - 18:27:52
+Django version 1.8.1, using settings 'example.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CONTROL-C.
+[18:27:53] Using gulpfile ~/p/example/gulpfile.js
+[18:27:53] Starting 'bower-install'...
+[18:27:54] Using cwd:  /Users/beau/p/example
+[18:27:54] Using bower dir:  static/vendor
+[18:27:54] Starting 'sass'...
+[18:27:54] Starting 'watch'...
+[18:27:54] Finished 'watch' after 19 ms
+[18:27:54] Starting 'watchify'...
+[18:28:08] Watching files required by bundle-about.js
+[18:28:08] Bundling bundle-about.js...
+[18:28:08] Watching files required by bundle-accounts-login.js
+[18:28:08] Bundling bundle-accounts-login.js...
+[18:28:08] Watching files required by bundle-accounts-signup.js
+[18:28:08] Bundling bundle-accounts-signup.js...
+[18:28:08] Watching files required by bundle-activities.js
+[18:28:08] Bundling bundle-activities.js...
+[18:28:08] Finished 'watchify' after 14 s
+[18:28:09] Finished 'sass' after 15 s
+^C>>> Closing gulp process
 ```
-
-This compiles the javascript and css and copies the files to the dist directory
-where Django can find them. Next start Django:
-
-```bash
-cd ../backend
-pipenv shell
-python manage.py migrate
-python manage.py runserver
-```
-
-Now point your browser to http://127.0.0.1:8000/ where you can see the fruit 
-of your labours.
-
-# Environment &amp; versions
-
-The boostrap.sh script assumes you are using the bash shell on Linux. It should 
-work on other operating systems but you will need to check the options for the 
-sed commands and change them to match your environment.
-
-The script also assumes you want to use python3.6 but it is trivial to change it 
-for another version.
-
-# Resources:
-
-* Everything you want to know about yarn: https://yarnpkg.com/
-* And the same for pipenv, https://docs.pipenv.org/
-* Getting started with Babel: https://babeljs.io/docs/setup/
-* Getting started with Gulp: https://github.com/gulpjs/gulp/blob/master/docs/getting-started.md
-* What the del module does: https://www.npmjs.com/package/del
-* A quick note on how babel changed the way it is distributed from v5 to v6: https://stackoverflow.com/questions/32544685/babel-vs-babel-core-vs-babel-runtime
-* A short note on the deprecation warning for graceful-fs: https://github.com/gulpjs/gulp/issues/1571
-* A slightly confusing discussion on why the failure to load @babel/register is not an issue: https://github.com/gulpjs/gulp/issues/1631
-
-# Further Reading
-
-There is a brief but useful introduction to using gulp in a Django project from
-Marco Louro at Lincoln Loop: https://lincolnloop.com/blog/integrating-front-end-tools-your-django-project/ 
-It is starting to show it's age but the associated gist has a lot of
-useful features.
-
-Herson Leite took that and modernised it to create a django project template
-called Frango, https://github.com/hersonls/frango/tree/master/frontend. Again
-this is useful for reference.
