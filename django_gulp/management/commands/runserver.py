@@ -94,12 +94,13 @@ class Command(StaticfilesRunserverCommand):
         atexit.register(self.kill_gulp_process)
 
         gulp_command = getattr(settings, 'GULP_DEVELOP_COMMAND', 'gulp')
+        # print(gulp_command)
         self.gulp_process = subprocess.Popen(
             gulp_command,
             shell=True,
             stdin=subprocess.PIPE,
-            stdout=self.stdout,
-            stderr=self.stderr)
+            stdout=self.stdout._out,
+            stderr=self.stderr._out)
 
         if self.gulp_process.poll() is not None:
             raise CommandError('gulp failed to start')
